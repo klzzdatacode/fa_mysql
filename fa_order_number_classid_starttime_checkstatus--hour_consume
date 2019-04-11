@@ -1,0 +1,14 @@
+SELECT 
+ o.order_number 订单号
+,FROM_UNIXTIME(l.start_time) 上课时间
+,ls.class_id
+,(case ls.check_status when 0 then '未签到' when 1 then '签到' when 2 then '请假' when 3 then '旷课' when 4 then'取消' end) 考勤状态
+from ol_order o 
+LEFT JOIN ol_user_hour uh on uh.order_id=o.order_number
+LEFT JOIN ol_live_student ls on ls.hour_id=uh.id
+LEFT JOIN ol_live l on l.id=ls.live_id
+
+WHERE
+l.start_time BETWEEN UNIX_TIMESTAMP('2019-03-01') and UNIX_TIMESTAMP('2019-04-01')
+and l.live_status=2 and ls.check_status in (1,2,3)
+and  o.order_number in( ) -- 根据需要补入
